@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/Kernel/Arch/x86/Include/**",
+                "${workspaceFolder}/Kernel/Drivers/**",
+                "${workspaceFolder}/Kernel/Include/**",
+                "${workspaceFolder}/Kernel/**",
+                "${workspaceFolder}/Kernel/System/**",
+                "${workspaceFolder}/Libs/**"
+            ],
+            "defines": [
+                "KERNEL_INCLUDES"
+            ],
+            "compilerPath": "${workspaceFolder}/Toolchain/Local/bin/i686-elf-g++",
+            "cStandard": "c11",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "gcc-x86"
+        }
+    ],
+    "version": 4
+}

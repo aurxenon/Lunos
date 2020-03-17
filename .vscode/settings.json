@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "string": "cpp",
+        "lambda1.C": "cpp"
+    },
+    "files.exclude": {
+        "Toolchain/Build": true,
+        "Toolchain/Local": true,
+        "Toolchain/Tarballs": true
+    }
+}

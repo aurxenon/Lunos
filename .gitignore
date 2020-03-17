@@ -1,0 +1,5 @@
+Toolchain/Build/*
+Toolchain/Local/*
+Toolchain/Tarballs/*
+Kernel/bin/*
+Kernel/obj/*
