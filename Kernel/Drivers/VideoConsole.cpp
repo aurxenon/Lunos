@@ -1,4 +1,6 @@
-#include "KLog.h"
+#include "VideoConsole.h"
+
+static unsigned int a = 0;
 
 void KClear() {
 	char *text_buffer = (char*)VGA_TEXT_BUFFER;
@@ -14,20 +16,19 @@ void KClear() {
 	}
 }
 
-void KLog(string format) {
-    const char *str = format.c_str();
+void KPrintString(string outputString) {
+	const char *str = outputString.c_str();
 	
 	char *text_buffer = (char*)VGA_TEXT_BUFFER;
-	unsigned int i = 0;
-	unsigned int j = 0;
 
-	KClear();
+    unsigned int b = 0;
 
 	//writes the string to video memory
-	while (str[j] != '\0') {
-		text_buffer[i] = str[j]; //ascii character
-		text_buffer[i+1] = 0b00001111; //color (white text black background)
-		++j;
-		i = i + 2;
+	while (str[b] != '\0') {
+		text_buffer[a] = str[b]; //ascii character
+		text_buffer[a+1] = 0b00001111; //color (white text black background)
+		b++;
+		a = a + 2;
 	}
+	outputString = "";
 }

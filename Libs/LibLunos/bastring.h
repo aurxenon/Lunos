@@ -15,21 +15,38 @@ typedef class basic_string {
             len = strlen(cstring);
             chars = strncpy((char*)kmalloce(len), cstring, len);
         }
-        basic_string operator =(const char* cstring) {
-            basic_string cppstring(cstring);
-            return cppstring;
+        basic_string(const char *cstring, size_t cstrlen) {
+            len = cstrlen;
+            chars = strncpy((char*)kmalloce(len), cstring, len);
+        }
+        basic_string operator=(const char* cstring) {
+            return basic_string(cstring);
         }
         char operator[](int index) {
             return chars[index];
         }
-        char operator==(basic_string bstr) {
+        basic_string& operator+(basic_string concatString) {
+            size_t new_len = len + concatString.size();
+            char *new_chars = (char*)kmalloce(new_len);
+            strcpy(new_chars, chars);
+            strcpy(new_chars + new_len, concatString.c_str());
+            return *this;
+        }
+        basic_string& operator+(char *concatString) {
+            size_t new_len = len + strlen(concatString);
+            char *new_chars = (char*)kmalloce(new_len);
+            strcpy(new_chars, chars);
+            strcpy(new_chars + new_len, concatString);
+            return *this;
+        }
+        bool operator==(basic_string bstr) {
             if (strcmp(chars, bstr.c_str()) == 0) {
                 return true;
             } else {
                 return false;
             }
         }
-        char operator==(const char *cstr) {
+        bool operator==(const char *cstr) {
             if (strcmp(chars, cstr) == 0) {
                 return true;
             } else {

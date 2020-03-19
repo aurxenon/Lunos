@@ -10,9 +10,9 @@ INCLUDES += -I../Libs
 ### compilers and options
 CC = i686-elf-g++
 AS = i686-elf-g++
-CFLAGS = -m32 -O2 $(INCLUDES) -DKERNEL_INCLUDES -DOF_ELF -DOF_X86 -lobjc -Wall -march=pentium -no-pie -fno-builtin -ffreestanding -lgcc
+CFLAGS = -g -m32 -O2 $(INCLUDES) -DKERNEL_INCLUDES -DOF_ELF -DOF_X86 -lobjc -Wall -march=pentium -no-pie -fno-builtin -ffreestanding -lgcc
 LD = i686-elf-g++
-LDFLAGS	= -T ldscript.ld -Wl,-Map=bin/output.map -ffreestanding -nostdlib
+LDFLAGS	= -g -T ldscript.ld -Wl,-Map=bin/output.map -ffreestanding -nostdlib
 OBJCOPY	= i686-elf-objcopy
 
 ### objects
@@ -23,6 +23,7 @@ OBJECTS += $(TOPDIR)/obj/SerialDevice.o
 OBJECTS += $(TOPDIR)/obj/KMalloc.o
 OBJECTS += $(TOPDIR)/obj/bastring.o
 OBJECTS += $(TOPDIR)/obj/string.o
+OBJECTS += $(TOPDIR)/obj/VideoConsole.o
 
 QUIET=>/dev/null
 
@@ -42,7 +43,7 @@ clean :
 	@rm -rf $(OBJDIR) $(BINDIR)
 	
 ### rules:
-$(TOPDIR)/obj/%.o : $(TOPDIR)/Include/Utils/%.cpp
+$(TOPDIR)/obj/%.o : $(TOPDIR)/Include/Log/%.cpp
 	@echo "[ CXX ] $@"
 	@${CC} ${CFLAGS} -o $@ -c $<
 

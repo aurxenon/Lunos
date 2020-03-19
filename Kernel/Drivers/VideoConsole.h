@@ -7,5 +7,5 @@
 #define VGA_CELL_BYTES 2
 #define VGA_TEXT_BUFFER 0xb8000
 
-void KLog(string format);
+void KPrintString(string);
 void KClear();
