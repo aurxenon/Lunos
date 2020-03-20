@@ -1,14 +1,14 @@
 include ../kernel.mk
 
-START_OBJECTS = $(OBJDIR)/Init.o
+SYSTEM_OBJECTS = $(OBJDIR)/KMalloc.o
 
-all : Start
+all : System
 
-Start : $(START_OBJECTS)
+System : $(SYSTEM_OBJECTS)
 
 CWD = $(shell /bin/pwd)
 
-all : $(START_OBJECTS)
+all : $(SYSTEM_OBJECTS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
 	@echo "[ CXX ] $@"

@@ -1,14 +1,14 @@
-include ../kernel.mk
+include ../../kernel.mk
 
-START_OBJECTS = $(OBJDIR)/Init.o
+LOG_OBJECTS = $(OBJDIR)/KLog.o
 
-all : Start
+all : Log
 
-Start : $(START_OBJECTS)
+Log : $(LOG_OBJECTS)
 
 CWD = $(shell /bin/pwd)
 
-all : $(START_OBJECTS)
+all : $(LOG_OBJECTS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
 	@echo "[ CXX ] $@"
