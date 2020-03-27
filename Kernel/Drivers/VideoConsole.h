@@ -8,4 +8,5 @@
 #define VGA_TEXT_BUFFER 0xb8000
 
 void KPrintString(string);
+void KPrintString(const char*);
 void KClear();

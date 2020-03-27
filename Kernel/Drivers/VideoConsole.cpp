@@ -1,6 +1,10 @@
 #include "VideoConsole.h"
 
-static unsigned int a = 0;
+/*i should probably move a lot of the code in this file
+  into ArchSpecific since almost all of the code applies 
+  exclusively to x86 BIOS based systems*/
+
+static volatile char *video = (volatile char*)VGA_TEXT_BUFFER;
 
 void KClear() {
 	char *text_buffer = (char*)VGA_TEXT_BUFFER;
@@ -11,24 +15,27 @@ void KClear() {
 	screensize = VGA_COLUMNS * VGA_ROWS * VGA_CELL_BYTES;
 	while (j < screensize) {
 		text_buffer[j] = ' '; //blank character
-		text_buffer[j+1] = 0; //color byte
+		text_buffer[j+1] = 0xff; //color byte
 		j = j + 2; //skips ahead 2 bytes to next cell
 	}
 }
 
-void KPrintString(string outputString) {
+void KPrintString(string outputString) { 
 	const char *str = outputString.c_str();
-	
-	char *text_buffer = (char*)VGA_TEXT_BUFFER;
+	size_t stringLength = outputString.size();
 
-    unsigned int b = 0;
-
-	//writes the string to video memory
-	while (str[b] != '\0') {
-		text_buffer[a] = str[b]; //ascii character
-		text_buffer[a+1] = 0b00001111; //color (white text black background)
-		b++;
-		a = a + 2;
+    int color=0b11110000; //white background black text
+	for (size_t i = 0; i < stringLength; i++) {
+		*video++ = *str++; //write character into framebuffer
+        *video++ = color;
 	}
-	outputString = "";
+}
+
+void KPrintString(const char* outputString) {
+	int color=0b11110000;
+	size_t cstringLength = strlen(outputString);
+	for (size_t i = 0; i < cstringLength; i++) {
+		*video++ = *outputString++;
+        *video++ = color;
+	}
 }

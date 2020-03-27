@@ -2,6 +2,9 @@ include ../../Kernel/kernel.mk
 
 LIBLUNOS_OBJECTS =  $(OBJDIR)/bastring.o
 LIBLUNOS_OBJECTS += $(OBJDIR)/string.o
+LIBLUNOS_OBJECTS += $(OBJDIR)/stdlib.o
+LIBLUNOS_OBJECTS += $(OBJDIR)/ConvertNums.o
+LIBLUNOS_OBJECTS += $(OBJDIR)/sstream.o
 
 all : LibLunos
 

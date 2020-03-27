@@ -4,6 +4,10 @@ void kostream::kostreamPrint() {
 	KPrintString(outputString);
 }
 
+void kostream::str(string newString) {
+	outputString = newString;
+}
+
 kostream kostream::write(const char *data) {
 	kostream output = kostream(data);
 	output.kostreamPrint();
