@@ -5,6 +5,7 @@ LIBLUNOS_OBJECTS += $(OBJDIR)/string.o
 LIBLUNOS_OBJECTS += $(OBJDIR)/stdlib.o
 LIBLUNOS_OBJECTS += $(OBJDIR)/ConvertNums.o
 LIBLUNOS_OBJECTS += $(OBJDIR)/sstream.o
+LIBLUNOS_OBJECTS += $(OBJDIR)/Vector.o
 
 all : LibLunos
 
