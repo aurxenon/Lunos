@@ -14,6 +14,7 @@ extern "C" {
         nums[1] = 8;
         nums[2] = 7;
         klog() << " Vector Test:" << nums[0] << "-" << nums[1]  << "-" << nums[2];
+        klog() << "increment increment increment increment increment";
         while (true) {}
     }
 }

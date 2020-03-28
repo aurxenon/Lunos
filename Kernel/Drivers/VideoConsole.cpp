@@ -5,6 +5,8 @@
   exclusively to x86 BIOS based systems*/
 
 static volatile char *video = (volatile char*)VGA_TEXT_BUFFER;
+static volatile unsigned int currRow;
+static volatile unsigned int currColumn;
 
 void KClear() {
 	char *text_buffer = (char*)VGA_TEXT_BUFFER;
@@ -18,6 +20,8 @@ void KClear() {
 		text_buffer[j+1] = 0xff; //color byte
 		j = j + 2; //skips ahead 2 bytes to next cell
 	}
+	currRow = 0;
+	currColumn = 0;
 }
 
 void KPrintString(string outputString) { 
@@ -28,6 +32,13 @@ void KPrintString(string outputString) {
 	for (size_t i = 0; i < stringLength; i++) {
 		*video++ = *str++; //write character into framebuffer
         *video++ = color;
+		currColumn += 1; //increment the column for each cell that's filled in
+
+		if (currColumn >= VGA_COLUMNS) { //if all the columns on this row are filled in, move on to the next row
+			currColumn = 0;
+			currRow++;
+			video = (char*)(VGA_TEXT_BUFFER + (VGA_CELL_BYTES * VGA_COLUMNS * currRow));
+		}
 	}
 }
 
