@@ -45,8 +45,16 @@ void KPrintString(string outputString) {
 void KPrintString(const char* outputString) {
 	int color=0b11110000;
 	size_t cstringLength = strlen(outputString);
+	
 	for (size_t i = 0; i < cstringLength; i++) {
 		*video++ = *outputString++;
         *video++ = color;
+		currColumn += 1; //increment the column for each cell that's filled in
+
+		if (currColumn >= VGA_COLUMNS) { //if all the columns on this row are filled in, move on to the next row
+			currColumn = 0;
+			currRow++;
+			video = (char*)(VGA_TEXT_BUFFER + (VGA_CELL_BYTES * VGA_COLUMNS * currRow));
+		}
 	}
 }
