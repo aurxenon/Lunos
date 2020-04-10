@@ -8,8 +8,15 @@ X86 : $(X86_OBJECTS)
 
 CWD = $(shell /bin/pwd)
 
-all : $(X86_OBJECTS)
+X86_LEVEL_DIRS = $(CWD)/Include/ArchSpecific/MM
+
+.PHONY: all $(X86_LEVEL_DIRS)
+all : $(X86_OBJECTS) $(X86_LEVEL_DIRS)
 
 $(OBJDIR)/%.o : $(CWD)/%.s
 	@echo "[ AS ]  $@"
 	@${AS} ${KERNEL_CFLAGS} -o $@ -c $<
+
+$(X86_LEVEL_DIRS) : 
+	@echo "[ MAKE ] Kernel/Arch/x86/Include/ArchSpecific/$@"
+	@$(MAKE) --directory=$@

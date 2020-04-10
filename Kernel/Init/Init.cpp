@@ -2,11 +2,14 @@
 #include <Drivers/SerialDevice.h>
 #include <LibLunos/Vector.h>
 #include <LibLunos/sstream.h>
+#include <ArchSpecific/MM/MemoryManager.h>
 
 extern "C" {
     void kmain() {
         KClear();
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
+        initializePaging();
+        klog() << " Bottom 4MB of RAM identity mapped! ";
         klog() << 5 << 6 << 7;
         klog() << 99;
         Vector<int> nums(3);
