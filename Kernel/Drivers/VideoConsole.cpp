@@ -8,6 +8,7 @@ static volatile char *video = (volatile char*)VGA_TEXT_BUFFER;
 static volatile unsigned int currRow;
 static volatile unsigned int currColumn;
 
+//clears the framebuffer by filling it with white blank characters sequentially
 void KClear() {
 	char *text_buffer = (char*)VGA_TEXT_BUFFER;
 	unsigned int j = 0;
@@ -24,6 +25,8 @@ void KClear() {
 	currColumn = 0;
 }
 
+//writes a C++ string to the screen, loops through each character and writes it
+//to the framebuffer with a black foreground and white background
 void KPrintString(string outputString) { 
 	const char *str = outputString.c_str();
 	size_t stringLength = outputString.size();
@@ -42,6 +45,7 @@ void KPrintString(string outputString) {
 	}
 }
 
+//writes a C-style string with a black foreground and white background
 void KPrintString(const char* outputString) {
 	int color=0b11110000;
 	size_t cstringLength = strlen(outputString);

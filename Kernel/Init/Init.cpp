@@ -17,6 +17,8 @@ extern "C" {
         nums[1] = 8;
         nums[2] = 7;
         klog() << " Vector Test:" << nums[0] << "-" << nums[1]  << "-" << nums[2];
+        //i'm pretty sure i was using this to check and see if KPrintString
+        //was smart enough to go onto the next line once the row was filled up
         klog() << "increment increment increment increment increment";
         while (true) {}
     }

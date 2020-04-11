@@ -10,70 +10,51 @@
 const char emptyString = '\0';
 
 //template<class charT>
-
-//this already needs to be refactored tbh
 typedef class basic_string {
     public:
-        basic_string() {
-            instantiate(&emptyString, 0);
-        }
-        basic_string(const basic_string& stringCopy) {
-            instantiate(stringCopy);
-        }
-        basic_string(const char *cstring) {
-            instantiate(cstring, strlen(cstring));
-        }
-        basic_string(const char *cstring, size_t cstrlen) {
-            instantiate(cstring, cstrlen);
-        }
-        basic_string operator=(const char* cstring) {
-            instantiate(cstring, strlen(cstring));
-            return *this;
-        }
-        basic_string operator=(basic_string equalString) {
-            basic_string stringCopy = basic_string(equalString);
-            instantiate(stringCopy);
-            return *this;
-        }
-        char operator[](int index) {
-            return chars[index];
-        }
-        basic_string& operator+(basic_string concatString) {
-            size_t new_len = len + concatString.len;
-            resize(new_len);
-            strncpy(chars + new_len, concatString.chars, concatString.len);
-            return *this;
-        }
-        basic_string& operator+(char *concatString) {
-            size_t new_len = len + strlen(concatString);
-            resize(new_len);
-            strncpy(chars + new_len, concatString, strlen(concatString));
-            return *this;
-        }
-        basic_string& operator+(char concatChar) {
-            resize(len + 1);
-            chars[len - 1] = concatChar;
-            return *this;
-        }
-        bool operator==(basic_string bstr) {
-            if (strcmp(chars, bstr.c_str()) == 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        bool operator==(const char *cstr) {
-            if (strcmp(chars, cstr) == 0) {
-                return true;
-            } else {
-                return false;
-            }
-        }
+
+        /* Constructors */
+
+        basic_string();
+        basic_string(const char *cstring);
+        basic_string(const char *cstring, size_t cstrlen);
+        //
+        //creates a copy of a C++ string
+        //
+        basic_string(const basic_string& stringCopy);
+
+        /* Various operator overloads for easy string manipulation and comparisons */
+
+        //
+        //copies data from a string into the C++ string being operated on
+        //
+        basic_string operator=(const char* cstring);
+        basic_string operator=(basic_string equalString);
+        //
+        //grabs a single character from a C++ string, array style
+        //
+        char operator[](int index);
+        //
+        //adds a string to the C++ string being operated on and returns the combined string
+        //
+        basic_string& operator+(basic_string concatString);
+        basic_string& operator+(char *concatString);
+        //
+        //adds a single character to a C++ string and returns the new string
+        //
+        basic_string& operator+(char concatChar);
+        //
+        //compares 2 string's and returns if the contents are equal or not
+        //
+        bool operator==(basic_string bstr);
+        bool operator==(const char *cstr);
+
+        /* Utility functions */
 
         size_t size();
 
-        //propietary addition to Lunos, adds a string to the very beginning of this string
-        basic_string& prepend(const char* cString);
+        //propietary addition to Lunos, adds a string to the beginning of the string being operated on
+        basic_string& prepend(const char* cstring);
         basic_string& prepend(const char character);
 
         void resize(size_t newSize);
@@ -81,9 +62,21 @@ typedef class basic_string {
         int compare(const basic_string& str);
 
     private:
+        //
+        //makes a new string buffer of the given size and places 
+        //old string into the new buffer at the given index
+        //if the string is empty, it simply allocates a new buffer
+        //and size according to the arguments
+        //
         void resizeAt(size_t newSize, size_t index);
+
+        //
+        //does most of the work in creating a new
+        //
         void instantiate(const basic_string& stringCopy);
         void instantiate(const char *cstring, size_t stringLength);
-        char *chars;
-        size_t len;
+
+
+        char *m_chars;
+        size_t m_len;
 } string;
