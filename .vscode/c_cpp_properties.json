@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/Kernel/Arch/x86/Include/**",
                 "${workspaceFolder}/Kernel/Drivers/**",
+                "${workspaceFolder}/Kernel/Filesystems/**",
                 "${workspaceFolder}/Kernel/Include/**",
                 "${workspaceFolder}/Kernel/**",
                 "${workspaceFolder}/Kernel/System/**",

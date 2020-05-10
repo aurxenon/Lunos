@@ -25,6 +25,8 @@ typedef u32 uintptr_t;
 typedef u32 size_t;
 typedef u64 uintmax_t;
 
+typedef u64 time_t;
+
 /*signed types*/
 
 typedef signed char i8;

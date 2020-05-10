@@ -2,7 +2,6 @@
 
 #include <ArchSpecific/Types.h>
 
-//this should probably go into ArchSpecific/x86
 inline void iowriteb(u16 port, u8 value)
 {
     asm volatile("outb %0, %1;" :: "a"(value), "Nd"(port));

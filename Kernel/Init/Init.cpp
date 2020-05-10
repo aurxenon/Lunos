@@ -3,6 +3,7 @@
 #include <LibLunos/Vector.h>
 #include <LibLunos/sstream.h>
 #include <ArchSpecific/MM/MemoryManager.h>
+#include <Drivers/DriverManager.h>
 
 extern "C" {
     void kmain() {
@@ -20,6 +21,7 @@ extern "C" {
         //i'm pretty sure i was using this to check and see if KPrintString
         //was smart enough to go onto the next line once the row was filled up
         klog() << "increment increment increment increment increment";
+        DriverManager driverManager = DriverManager();
         while (true) {}
     }
 }

@@ -11,6 +11,6 @@ INCLUDES += -I$(KERNELDIR)/Include/
 INCLUDES += -I$(KERNELDIR)/Arch/x86/Include/
 INCLUDES += -I$(KERNELDIR)
 
-KERNEL_CFLAGS = $(CFLAGS) $(INCLUDES) -DKERNEL_INCLUDES -DOF_ELF -DOF_X86 -lobjc -no-pie -fno-builtin -ffreestanding -lgcc
+KERNEL_CFLAGS = $(CFLAGS) $(INCLUDES) -DKERNEL_INCLUDES -DOF_ELF -DOF_X86 -lobjc -no-pie -fno-builtin -ffreestanding -lgcc -fno-exceptions -fno-rtti
 
 LDFLAGS	= -g -T ldscript.ld -Wl,-Map=bin/output.map -ffreestanding -nostdlib
