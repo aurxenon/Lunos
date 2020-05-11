@@ -11,6 +11,8 @@ extern "C" {
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
         initializePaging();
         klog() << " Bottom 4MB of RAM identity mapped! ";
+        InitializeSegmentation();
+        klog() << "GDT initialized! ";
         klog() << 5 << 6 << 7;
         klog() << 99;
         Vector<int> nums(3);
