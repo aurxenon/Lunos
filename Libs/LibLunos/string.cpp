@@ -35,4 +35,13 @@ extern "C" {
         }
         return dest;
     }
+
+    void *memset(void *dest, int c, size_t len) {
+        u8* fillDest = (u8*)dest;
+        u8 fillC = (u8)c;
+        for (size_t i = 0; i < len; i++) {
+            fillDest[i] = fillC;
+        }
+        return fillDest;
+    }
 }
