@@ -15,9 +15,9 @@ multiboot_end:
 
 /*16kb stack*/
 .section .bss
-.align 16
+.align 64
 stack_begin:
-.skip 1024 * 16
+.skip 1024 * 64
 stack_end:
 
 .section .text
