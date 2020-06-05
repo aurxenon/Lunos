@@ -4,15 +4,19 @@
 #include <LibLunos/sstream.h>
 #include <ArchSpecific/MM/MemoryManager.h>
 #include <Drivers/DriverManager.h>
+#include <ArchSpecific/MM/InterruptManager.h>
 
 extern "C" {
     void kmain() {
+        DisableInterrupts();
         KClear();
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
         initializePaging();
         klog() << " Bottom 4MB of RAM identity mapped! ";
         InitializeSegmentation();
         klog() << "GDT initialized! ";
+        InitializeInterrupts();
+        klog() << "Interrupts enabled! ";
         klog() << 5 << 6 << 7;
         klog() << 99;
         Vector<int> nums(3);
@@ -24,6 +28,12 @@ extern "C" {
         //was smart enough to go onto the next line once the row was filled up
         klog() << "increment increment increment increment increment";
         DriverManager driverManager = DriverManager();
+        EnableInterrupts();
+        __asm __volatile__("int $0x0");
+        __asm __volatile__("int $0x01");
+        __asm __volatile__("int $0x02");
+        __asm __volatile__("int $0xee");
+        //__asm __volatile__("ud2");
         while (true) {}
     }
 }
