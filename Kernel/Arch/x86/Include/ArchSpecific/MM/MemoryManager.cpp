@@ -3,9 +3,20 @@
 u32 page_directory[PAGE_DIR_ENTRIES] __attribute__((aligned(4096)));
 u32 page_table_1[PAGE_TBL_ENTRIES] __attribute__((aligned(4096)));
 
-gdt_entry_t gdt_entries[5];
-gdt_ptr_t gdt_ptr;
+///////////////
 
+GDTPtr globalDescriptorTablePTR;
+GDTEntry* globalDescriptorTable;
+
+u16 globalDescriptorTableLength;
+
+/*
+* RegisterGDTEntry:
+*   Creates page table to identity map the first 4MB of RAM, loads this table
+*   into the page directory, then enables paging and loads page directory into processor
+* Arguments:
+* Return:
+*/
 void initializePaging() {
 
     //
@@ -41,54 +52,55 @@ void initializePaging() {
 }
 
 /*
-    This segmentation code is very heavily based on James Molloy's GDT tutorial
+* RegisterGDTEntry:
+*   Creates a new GDT entry using given arguments and stores it in GDT array
+* Arguments:
+*   index - integer corresponding to where in the GDT the entry should be placed
+*   limit - memory address of end of GDT region
+*   base - memory address of start of GDT region
+*   flags - bit array that controls read/write/execution of gdt region among other things
+* Return:
+*/
+static void RegisterGDTEntry(int index, u32 limit, u32 base, u8 flags) {
+    globalDescriptorTable[index].limit_low = limit & 0xFFFF;
+    globalDescriptorTable[index].base_low = base & 0xFFFF;
+    globalDescriptorTable[index].base_middle = (base >> 16) & 0xFF;
+    globalDescriptorTable[index].access = flags;
+    globalDescriptorTable[index].granularity = GDT_GRANULARITY;
+    globalDescriptorTable[index].base_high = (base >> 24) & 0xFF;
+}
+
+/*
+* LoadGDT:
+*   Loads the pointer to the new global descriptor table into the processor
+* Arguments:
+* Return:
+*/
+static inline void LoadGDT()
+{
+    asm("lgdt %0"::"m"(globalDescriptorTablePTR));
+}
+
+/*
+* InitializeSegmentation:
+*   Creates 5 overlapping GDT entries that opens the whole x86 protected memory space
+*   to the user and kernel for reading/writing/executing
+* Arguments:
+* Return:
 */
 void InitializeSegmentation() {
-    gdt_ptr.limit = (sizeof(gdt_entry_t) * 5) - 1;
-    gdt_ptr.base  = (u32)&gdt_entries;
+    globalDescriptorTable = (GDTEntry*)kmalloce(sizeof(GDTEntry) * GDT_MAX_ENTRIES);
 
-    GDTSetCallGate(0, 0, 0, 0, 0);                // Null segment
-    GDTSetCallGate(1, 0, 0xFFFFFFFF, 0x9A, 0xCF); // Code segment
-    GDTSetCallGate(2, 0, 0xFFFFFFFF, 0x92, 0xCF); // Data segment
-    GDTSetCallGate(3, 0, 0xFFFFFFFF, 0xFA, 0xCF); // User mode code segment
-    GDTSetCallGate(4, 0, 0xFFFFFFFF, 0xF2, 0xCF); // User mode data segment
+    globalDescriptorTableLength = GDT_NUM_ENTRIES;
 
-    LoadGDT((u32)&gdt_ptr);
-}
+    globalDescriptorTablePTR.address = globalDescriptorTable;
+    globalDescriptorTablePTR.size = (globalDescriptorTableLength * sizeof(GDTEntry)) - 1;
 
-void GDTSetCallGate(i32 num, u32 base, u32 limit, u8 access, u8 granularity)
-{
-   gdt_entries[num].base_low    = (base & 0xFFFF);
-   gdt_entries[num].base_middle = (base >> 16) & 0xFF;
-   gdt_entries[num].base_high   = (base >> 24) & 0xFF;
+    RegisterGDTEntry(0, 0, 0, 0);
+    RegisterGDTEntry(1, 0xFFFFFFFF, 0, GDT_RING0_CODE);
+    RegisterGDTEntry(2, 0xFFFFFFFF, 0, GDT_RING0_DATA);
+    RegisterGDTEntry(3, 0xFFFFFFFF, 0, GDT_RING3_CODE);
+    RegisterGDTEntry(4, 0xFFFFFFFF, 0, GDT_RING3_DATA);
 
-   gdt_entries[num].limit_low   = (limit & 0xFFFF);
-   gdt_entries[num].granularity = (limit >> 16) & 0x0F;
-
-   gdt_entries[num].granularity |= granularity & 0xF0;
-   gdt_entries[num].access      = access;
-}
-
-void LoadGDT(u32 gdt_pointer) {
-    __asm __volatile__("lgdt %0"::"m"(gdt_pointer):"memory");
-}
-
-void write_cr3(u32 value) {
-    __asm __volatile__(
-        "movl %0, %%cr3" ::"r"(value):"memory" 
-    );
-}
-
-void write_cr0(u32 value) {
-    __asm __volatile__(
-        "movl %0, %%cr0" ::"r"(value):"memory" 
-    );
-}
-
-u32 read_cr0() {
-    u32 value;
-    __asm __volatile__(
-        "movl %%cr0, %0":"=r"(value)::"memory" 
-    );
-    return value;
+    LoadGDT();
 }
