@@ -17,10 +17,10 @@
 * Fix any stubs
 * Raw framebuffer drawing would be useful for non-BIOS systems
 * CMOS needs to check if the time is updating before it reads
+* Write PIT driver
 
 **Kernel/Arch/x86/**
 * Paging needs to be extended so that the full range of memory can be taken advantage of
-* We need an IDT
 
 **Kernel/Arch**
 * It would be good to start attempting ports to other architectures early on before the system becomes too x86-dependent

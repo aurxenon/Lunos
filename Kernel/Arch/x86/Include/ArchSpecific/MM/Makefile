@@ -2,6 +2,7 @@ include ../../../../../kernel.mk
 
 MM_OBJECTS =  $(OBJDIR)/MemoryManager.o
 MM_OBJECTS += $(OBJDIR)/InterruptManager.o
+MM_OBJECTS += $(OBJDIR)/PIC.o
 
 all : MM
 

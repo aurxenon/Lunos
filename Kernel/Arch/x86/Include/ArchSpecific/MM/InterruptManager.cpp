@@ -5,7 +5,7 @@ const char* interruptDescriptions[17] = {"Divide Error", "Debug", "NMI Interrupt
     "Invalid TSS", "Segment Not Present", "Stack Segment Fault", "General Protection", "Page Fault", 
     "Reserved", "Floating-Point Error"};
 
-static IDTPtr interruptTablePtr;
+IDTPtr interruptTablePtr;
 static IDTEntry* interruptTable;
 
 Exception(0)
@@ -47,24 +47,13 @@ static void UnimplementedISR()
 *   ISR - function pointer to the ISR being referenced
 * Return:
 */
-static void AddISR(int index, void (*ISR)())
+void AddISR(int index, void (*ISR)())
 {
     interruptTable[index].offset_1 = (((u32)ISR) & 0xffff);
     interruptTable[index].selector = KERNEL_MODE_SELECTOR;
     interruptTable[index].zero = 0;
     interruptTable[index].type_attr = KERNEL_MODE_TYPE_ATTR;
     interruptTable[index].offset_2 = ((((u32)ISR) >> 16) & 0xffff);
-}
-
-/*
-* LoadIDT:
-*   Loads the IDT array into the processor
-* Arguments:
-* Return:
-*/
-static inline void LoadIDT()
-{
-    __asm __volatile__("lidt %0"::"m"(interruptTablePtr));
 }
 
 /*

@@ -4,7 +4,7 @@
 #include <Log/KLog.h>
 #include <System/KMalloc.h>
 
-#define IRQ_BASE 40
+#include "PIC.h"
 
 #define IDT_NUM_ENTRIES 256
 
@@ -30,6 +30,19 @@ struct IDTPtr {
     void* address;
 } __attribute__ ((packed));
 
+void AddISR(int index, void (*ISR)());
+
+/*
+* LoadIDT:
+*   Loads the IDT array into the processor
+* Arguments:
+* Return:
+*/
+inline void LoadIDT()
+{
+    extern IDTPtr interruptTablePtr;
+    __asm __volatile__("lidt %0"::"m"(interruptTablePtr));
+}
 
 inline void DisableInterrupts() {
     asm volatile("cli");

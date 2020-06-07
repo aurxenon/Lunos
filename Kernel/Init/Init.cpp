@@ -5,6 +5,7 @@
 #include <ArchSpecific/MM/MemoryManager.h>
 #include <Drivers/DriverManager.h>
 #include <ArchSpecific/MM/InterruptManager.h>
+#include <ArchSpecific/MM/PIC.h>
 
 extern "C" {
     void kmain() {
@@ -17,6 +18,8 @@ extern "C" {
         klog() << "GDT initialized! ";
         InitializeInterrupts();
         klog() << "Interrupts enabled! ";
+        InitializePIC();
+        klog() << "PIC enabled! ";
         klog() << 5 << 6 << 7;
         klog() << 99;
         Vector<int> nums(3);
