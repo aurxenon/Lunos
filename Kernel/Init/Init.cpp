@@ -6,6 +6,7 @@
 #include <Drivers/DriverManager.h>
 #include <ArchSpecific/MM/InterruptManager.h>
 #include <ArchSpecific/MM/PIC.h>
+#include <Drivers/Time/Timer/PIT/PIT.h>
 
 extern "C" {
     void kmain() {
@@ -31,12 +32,22 @@ extern "C" {
         //was smart enough to go onto the next line once the row was filled up
         klog() << "increment increment increment increment increment";
         DriverManager driverManager = DriverManager();
+
+        for (int i = 0; i <= 16; i++) {
+            DisableIRQ(i);
+        }
+        EnableIRQ(2);
+
+        PIT pitDriver = PIT();
+        pitDriver.initialize_driver();
         EnableInterrupts();
-        __asm __volatile__("int $0x0");
+        /*__asm __volatile__("int $0x0");
         __asm __volatile__("int $0x01");
-        __asm __volatile__("int $0x02");
-        __asm __volatile__("int $0xee");
+        __asm __volatile__("int $0x02");*/
+        //__asm __volatile__("int $0xee");
         //__asm __volatile__("ud2");
-        while (true) {}
+        while (true) {
+            asm("hlt");
+        }
     }
 }

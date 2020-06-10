@@ -11,8 +11,17 @@
 #define KERNEL_MODE_SELECTOR  8
 #define KERNEL_MODE_TYPE_ATTR 142
 
+#define _s_(a)   #a
+
 #define Exception(i) \
-    void ExceptionHandler ## i () \
+    extern "C" void __asm_Exception_ISR ## i (); \
+    __asm( \
+        ".globl __asm_Exception_ISR" _s_(i) "\n" \
+        "__asm_Exception_ISR" _s_(i) ":\n" \
+        "   call ExceptionHandler" _s_(i) "\n" \
+        "   iret\n" \
+    ); \
+    extern "C" void ExceptionHandler ## i () \
     { \
         klog() << " Caught Exception " << interruptDescriptions[i]; \
     }

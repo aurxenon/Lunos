@@ -12,7 +12,7 @@
 #define PIC1_DATA       0xA1
 
 #define PIC_EOI         0x20
-#define PIC_INITIALIZE  0x11 
+#define PIC_INITIALIZE  0x11 //ICW1 is a bit field, bit 0 allows ICW4, bit 4 is always enabled
 #define PIC_ICW2        IRQ_BASE
 #define PIC_MASTER_ICW3 0x04 //ICW3 is a bit field, bit 2 tells the master PIC there's a slave on IRQ2
 #define PIC_SLAVE_ICW3  0x02 //tells slave PIC it's connected to master PIC's IRQ2

@@ -27,13 +27,28 @@ Exception(15)
 Exception(16)
 
 /*
+* __asm_UnimplementedISR:
+*   Serves as a "safe" assembly wrapper for UnimplementedISR so that the interrupt handler
+*   will be safely called
+* Arguments:
+* Return:
+*/
+extern "C" void __asm_UnimplementedISR();
+__asm(
+    ".globl __asm_UnimplementedISR\n"
+    "__asm_UnimplementedISR:\n"
+    "   call UnimplementedISR\n"
+    "   iret\n"
+);
+
+/*
 * UnimplementedISR:
 *   Serves as a blank ISR for interrupt table entries that aren't
 *   directly mapped to a dedicated ISR
 * Arguments:
 * Return:
 */
-static void UnimplementedISR()
+extern "C" void UnimplementedISR()
 {
     klog() << " Unimplemented ISR ";
 }
@@ -70,26 +85,26 @@ void InitializeInterrupts()
     interruptTablePtr.size = IDT_NUM_ENTRIES * sizeof(IDTEntry);
 
     for (int i = 17; i <= (IDT_NUM_ENTRIES - 1); i++) {
-        AddISR(i, UnimplementedISR);
+        AddISR(i, __asm_UnimplementedISR);
     }
 
-    AddISR(0, ExceptionHandler0);
-    AddISR(1, ExceptionHandler1);
-    AddISR(2, ExceptionHandler2);
-    AddISR(3, ExceptionHandler3);
-    AddISR(4, ExceptionHandler4);
-    AddISR(5, ExceptionHandler5);
-    AddISR(6, ExceptionHandler6);
-    AddISR(7, ExceptionHandler7);
-    AddISR(8, ExceptionHandler8);
-    AddISR(9, ExceptionHandler9);
-    AddISR(10, ExceptionHandler10);
-    AddISR(11, ExceptionHandler11);
-    AddISR(12, ExceptionHandler12);
-    AddISR(13, ExceptionHandler13);
-    AddISR(14, ExceptionHandler14);
-    AddISR(15, ExceptionHandler15);
-    AddISR(16, ExceptionHandler16);
+    AddISR(0, __asm_Exception_ISR0);
+    AddISR(1, __asm_Exception_ISR1);
+    AddISR(2, __asm_Exception_ISR2);
+    AddISR(3, __asm_Exception_ISR3);
+    AddISR(4, __asm_Exception_ISR4);
+    AddISR(5, __asm_Exception_ISR5);
+    AddISR(6, __asm_Exception_ISR6);
+    AddISR(7, __asm_Exception_ISR7);
+    AddISR(8, __asm_Exception_ISR8);
+    AddISR(9, __asm_Exception_ISR9);
+    AddISR(10, __asm_Exception_ISR10);
+    AddISR(11, __asm_Exception_ISR11);
+    AddISR(12, __asm_Exception_ISR12);
+    AddISR(13, __asm_Exception_ISR13);
+    AddISR(14, __asm_Exception_ISR14);
+    AddISR(15, __asm_Exception_ISR15);
+    AddISR(16, __asm_Exception_ISR16);
 
     LoadIDT();
 }

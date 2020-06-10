@@ -5,9 +5,8 @@
 /*
     Base class for all interval timers
 */
-#if 0
-class TimerDriver : TimeDriver {
+class TimerDriver : public TimeDriver {
     public:
-        TimerDriver() {}
+        virtual Driver* initialize_driver() = 0;
+        virtual bool deinitialize_driver() = 0;
 };
-#endif
