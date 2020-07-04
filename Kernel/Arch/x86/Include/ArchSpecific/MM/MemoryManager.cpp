@@ -61,12 +61,12 @@ void initializePaging() {
 *   flags - bit array that controls read/write/execution of gdt region among other things
 * Return:
 */
-static void RegisterGDTEntry(int index, u32 limit, u32 base, u8 flags) {
+void RegisterGDTEntry(int index, u32 limit, u32 base, u8 access, u8 flags) {
     globalDescriptorTable[index].limit_low = limit & 0xFFFF;
     globalDescriptorTable[index].base_low = base & 0xFFFF;
     globalDescriptorTable[index].base_middle = (base >> 16) & 0xFF;
-    globalDescriptorTable[index].access = flags;
-    globalDescriptorTable[index].granularity = GDT_GRANULARITY;
+    globalDescriptorTable[index].access = access;
+    globalDescriptorTable[index].granularity = flags;
     globalDescriptorTable[index].base_high = (base >> 24) & 0xFF;
 }
 
@@ -76,7 +76,7 @@ static void RegisterGDTEntry(int index, u32 limit, u32 base, u8 flags) {
 * Arguments:
 * Return:
 */
-static inline void LoadGDT()
+void LoadGDT()
 {
     asm("lgdt %0"::"m"(globalDescriptorTablePTR));
 }
@@ -96,11 +96,12 @@ void InitializeSegmentation() {
     globalDescriptorTablePTR.address = globalDescriptorTable;
     globalDescriptorTablePTR.size = (globalDescriptorTableLength * sizeof(GDTEntry)) - 1;
 
-    RegisterGDTEntry(0, 0, 0, 0);
-    RegisterGDTEntry(1, 0xFFFFFFFF, 0, GDT_RING0_CODE);
-    RegisterGDTEntry(2, 0xFFFFFFFF, 0, GDT_RING0_DATA);
-    RegisterGDTEntry(3, 0xFFFFFFFF, 0, GDT_RING3_CODE);
-    RegisterGDTEntry(4, 0xFFFFFFFF, 0, GDT_RING3_DATA);
+    RegisterGDTEntry(0, 0, 0, 0, GDT_STANDARD_FLAGS);
+    RegisterGDTEntry(1, 0xFFFFFFFF, 0, GDT_RING0_CODE, GDT_STANDARD_FLAGS);
+    RegisterGDTEntry(2, 0xFFFFFFFF, 0, GDT_RING0_DATA, GDT_STANDARD_FLAGS);
+    RegisterGDTEntry(3, 0xFFFFFFFF, 0, GDT_RING3_CODE, GDT_STANDARD_FLAGS);
+    RegisterGDTEntry(4, 0xFFFFFFFF, 0, GDT_RING3_DATA, GDT_STANDARD_FLAGS);
+    //RegisterGDTEntry(5, 0, 0, 0, GDT_STANDARD_FLAGS);
 
     LoadGDT();
 }

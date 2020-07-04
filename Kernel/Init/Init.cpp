@@ -7,10 +7,27 @@
 #include <ArchSpecific/MM/InterruptManager.h>
 #include <ArchSpecific/MM/PIC.h>
 #include <Drivers/Time/Timer/PIT/PIT.h>
+#include <System/Scheduler/Scheduler.h>
+
+void process1() {
+    while (true) {
+        klog() << " Testing1 ";
+        EnableInterrupts();
+        asm("hlt");
+    }
+}
+
+void process2() {
+    while (true) {
+        klog() << " Testing2 ";
+        asm("hlt");
+    }
+}
 
 extern "C" {
     void kmain() {
         DisableInterrupts();
+        set_iopl();
         KClear();
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
         initializePaging();
@@ -47,6 +64,7 @@ extern "C" {
         //__asm __volatile__("int $0xee");
         //__asm __volatile__("ud2");
         while (true) {
+            klog() << "K1";
             asm("hlt");
         }
     }

@@ -2,10 +2,15 @@
 
 u32 count = 0; //gonna have to be moved to some sort of global timer class
 
+Scheduler scheduler;
+extern void process1();
+extern void process2();
+
 extern "C" void __asm_PIT_ISR();
 
 PIT::PIT() {
-    //stub   
+    scheduler = Scheduler();
+    //stub
 }
 
 /*
@@ -55,10 +60,15 @@ bool PIT::deinitialize_driver() {
 * Arguments:
 * Return:
 */
-extern "C" void PIT_IRQ_Handler() {
+extern "C" u32 PIT_IRQ_Handler(u32 esp, TrapFrame trapFrame) {
     count++;
-    klog() << "-PIT-" << count;
+    u32 newEsp = scheduler.Schedule(esp);
+    if (count == 1) {
+        scheduler.addProcess(process1);
+        //scheduler.addProcess(process2);
+    }
     EndInterrupt(PIT_IRQ);
+    return newEsp;
 }
 
 /*
@@ -70,6 +80,18 @@ extern "C" void PIT_IRQ_Handler() {
 __asm(
     ".globl __asm_PIT_ISR\n"
     "__asm_PIT_ISR:\n"
+    "   pushal\n"
+    "   push %ds\n"
+    "   push %es\n"
+    "   push %fs\n"
+    "   push %gs\n"
+    "   push %esp\n"
     "   call PIT_IRQ_Handler\n"
+    "   mov %eax, %esp\n"
+    "   pop %gs\n"
+    "   pop %fs\n"
+    "   pop %es\n"
+    "   pop %ds\n"
+    "   popal\n"
     "   iret\n"
 );

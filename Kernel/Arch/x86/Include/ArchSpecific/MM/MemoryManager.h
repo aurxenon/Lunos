@@ -10,13 +10,16 @@
 #define UNINITIALIZED_TBL_ENTRY 0b00000000000000000000000000000011 //page table entry is r/w, and is present in memory
 #define PAGING_ENABLE 0b10000000000000000000000000000001 //enables PG and PE
 
-#define GDT_MAX_ENTRIES 256
-#define GDT_NUM_ENTRIES 5
-#define GDT_GRANULARITY 0xCF
-#define GDT_RING0_CODE  0x9A
-#define GDT_RING0_DATA  0x92
-#define GDT_RING3_CODE  0xFA
-#define GDT_RING3_DATA  0xF2
+#define GDT_MAX_ENTRIES    256
+#define GDT_NUM_ENTRIES    5
+#define GDT_STANDARD_FLAGS 0xCF
+#define GDT_RING0_CODE     0x9A
+#define GDT_RING0_DATA     0x92
+#define GDT_RING3_CODE     0xFA
+#define GDT_RING3_DATA     0xF2
+
+#define GDT_RING0_DATA_SELECTOR  (2 << 3) | 0 //2 represents kernel data in gdt, 0 represents ring 0
+#define GDT_RING0_CODE_SELECTOR  (1 << 3) | 0 //1 represents kernel code in gdt, 0 represents ring 0
 
 struct GDTEntry {
     u16 limit_low;           // The lower 16 bits of the limit.
@@ -39,6 +42,9 @@ struct GDTPtr
     Turns on paging.
 */
 void initializePaging();
+
+void RegisterGDTEntry(int index, u32 limit, u32 base, u8 access, u8 flags);
+void LoadGDT();
 
 /*
     Sets up Global Descriptor Table

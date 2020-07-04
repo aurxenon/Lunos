@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ArchSpecific/Types.h>
+#include <Log/KLog.h>
 
 template <class T>
 class DoublyLinkedNode;
@@ -19,13 +20,13 @@ class DoublyLinkedList {
 
         size_t size();
 
-        void push_front(DoublyLinkedNode<T>* node);
-        DoublyLinkedNode<T>* pop_front();
+        void push_front(T* node);
+        void push_back(T* node);
 
-        void push_back(DoublyLinkedNode<T>* node);
-        DoublyLinkedNode<T>* pop_back();
+        void remove(T* node);
+        void remove(int index);
 
-        DoublyLinkedNode<T>* operator[](int index);
+        T& operator[](int index);
     private:
         T* m_items;
         T* m_back;
@@ -35,18 +36,14 @@ class DoublyLinkedList {
 template <class T>
 class DoublyLinkedNode {
     public:
-        DoublyLinkedNode(T item);
+        DoublyLinkedNode() {}
 
-        DoublyLinkedNode* getNextNode();
-        DoublyLinkedNode* getPrevNode();
+        T* getNextNode();
+        T* getPrevNode();
 
-        void setNextNode(DoublyLinkedNode* nextNode);
-        void setPrevNode(DoublyLinkedNode* prevNode);
-
-        T getContents();
-        void setContents(T newContents);
+        void setNextNode(T* nextNode);
+        void setPrevNode(T* prevNode);
     private:
-        T m_contents;
-        DoublyLinkedNode *m_nextNode;
-        DoublyLinkedNode *m_prevNode;
+        T* m_nextNode;
+        T* m_prevNode;
 };

@@ -4,6 +4,8 @@
 #include <ArchSpecific/MM/PIC.h>
 #include <ArchSpecific/MM/InterruptManager.h>
 #include <ArchSpecific/IO.h>
+#include <ArchSpecific/Arch.h>
+#include <System/Scheduler/Scheduler.h>
 
 #define PIT_IRQ      0x00
 #define PIT_CHANNEL0 0x40
