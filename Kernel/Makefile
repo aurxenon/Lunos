@@ -19,9 +19,9 @@ clean :
 	@rm -rf $(OBJDIR) $(BINDIR)
 
 LunosKernel : ${OBJECTS}
-	@echo "[ LD ] $@"
+	@echo "[ LD ]    $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@${LD} -o $(BINDIR)/LunosKernel ${LDFLAGS} $(shell find $(OBJDIR) -name '*.o')
 
 $(KERNEL_LEVEL_DIRS) :
-	@echo "[ MAKE ] Kernel/$@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@

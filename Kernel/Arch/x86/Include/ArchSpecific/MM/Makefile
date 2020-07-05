@@ -13,5 +13,5 @@ CWD = $(shell /bin/pwd)
 all : $(MM_OBJECTS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
-	@echo "[ CXX ] $@"
+	@echo "[ CXX ]   $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${CXX} ${KERNEL_CFLAGS} -o $@ -c $<

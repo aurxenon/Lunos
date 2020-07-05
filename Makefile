@@ -8,5 +8,5 @@ LUNOS_DIRS =  Kernel
 all : $(LUNOS_DIRS)
 
 $(LUNOS_DIRS) :
-	@echo "[ MAKE ] $@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@

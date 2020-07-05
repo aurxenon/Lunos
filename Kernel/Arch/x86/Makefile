@@ -14,9 +14,9 @@ X86_LEVEL_DIRS = $(CWD)/Include/ArchSpecific/MM
 all : $(X86_OBJECTS) $(X86_LEVEL_DIRS)
 
 $(OBJDIR)/%.o : $(CWD)/%.s
-	@echo "[ AS ]  $@"
+	@echo "[ AS ]    $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${AS} ${KERNEL_CFLAGS} -o $@ -c $<
 
 $(X86_LEVEL_DIRS) : 
-	@echo "[ MAKE ] Kernel/Arch/x86/Include/ArchSpecific/$@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@

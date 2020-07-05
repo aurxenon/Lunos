@@ -16,9 +16,9 @@ SYSTEM_LEVEL_DIRS += $(CWD)/Process
 all : $(SYSTEM_OBJECTS) $(SYSTEM_LEVEL_DIRS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
-	@echo "[ CXX ] $@"
+	@echo "[ CXX ]   $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${CXX} ${KERNEL_CFLAGS} -o $@ -c $<
 
 $(SYSTEM_LEVEL_DIRS) : 
-	@echo "[ MAKE ] Kernel/System/$@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@

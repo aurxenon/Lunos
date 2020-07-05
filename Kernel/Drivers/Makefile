@@ -17,9 +17,9 @@ DRIVER_LEVEL_DIRS = $(CWD)/Time
 all : $(DRIVER_OBJECTS) $(DRIVER_LEVEL_DIRS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
-	@echo "[ CXX ] $@"
+	@echo "[ CXX ]   $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${CXX} ${KERNEL_CFLAGS} -o $@ -c $<
 
 $(DRIVER_LEVEL_DIRS) : 
-	@echo "[ MAKE ] Kernel/Drivers/$@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@

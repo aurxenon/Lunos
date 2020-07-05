@@ -14,9 +14,9 @@ RTC_LEVEL_DIRS = $(CWD)/CMOS
 all : $(RTC_OBJECTS) $(RTC_LEVEL_DIRS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
-	@echo "[ CXX ] $@"
+	@echo "[ CXX ]   $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${CXX} ${KERNEL_CFLAGS} -o $@ -c $<
 
 $(RTC_LEVEL_DIRS) : 
-	@echo "[ MAKE ] Kernel/Drivers/Time/RTC/$@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@

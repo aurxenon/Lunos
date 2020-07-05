@@ -20,5 +20,5 @@ all : $(LIBLUNOS_OBJECTS)
 #RIGHT NOW LIBLUNOS IS BUILT UNDER KERNEL ASSUMPTIONS
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
-	@echo "[ CXX ] $@"
+	@echo "[ CXX ]   $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${CXX} ${KERNEL_CFLAGS} -o $@ -c $<

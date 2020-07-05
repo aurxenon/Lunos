@@ -15,9 +15,9 @@ TIME_LEVEL_DIRS += $(CWD)/Timer
 all : $(TIME_OBJECTS) $(TIME_LEVEL_DIRS)
 
 $(OBJDIR)/%.o : $(CWD)/%.cpp
-	@echo "[ CXX ] $@"
+	@echo "[ CXX ]   $(shell realpath --relative-to=$(TOPDIR) $<)"
 	@${CXX} ${KERNEL_CFLAGS} -o $@ -c $<
 
 $(TIME_LEVEL_DIRS) : 
-	@echo "[ MAKE ] Kernel/Drivers/Time/$@"
+	@echo "[ MAKE ]  $(shell realpath --relative-to=$(TOPDIR) $@)"
 	@$(MAKE) --directory=$@
