@@ -28,21 +28,85 @@ class Vector {
             num = numItems;
             vectorCapacity = numItems;
         }
-        void push_back(T value);
-        void pop_back();
-        void erase();
-        size_t size();
-        size_t capacity();
-        T& at(size_t n);
-        T& front();
-        T& back();
-        T* data();
-        void resize(size_t new_len);
-        void autoresize();
-        void clear();
-        bool empty();
+        
+        void push_back(T value) {
+            num++;
+            autoresize();
+            vectorBlock[size()] = value;
+        }
 
-        T& operator[](size_t index);
+        void pop_back() {
+            vectorBlock[num - 1] = nullptr;
+            num--;
+        }
+        
+        void erase() {
+            for (int i = 0; i < num; i++) {
+                vectorBlock[i] = nullptr;
+            }
+            num = 0;
+        }
+        
+        size_t size() {
+            return num;
+        }
+        
+        size_t capacity() {
+            return vectorCapacity;
+        }
+        
+        T& at(size_t index) {
+            autoresize();
+            return vectorBlock[index];
+        }
+        
+        T& front() {
+            return vectorBlock[0];
+        }
+        
+        T& back() {
+            return vectorBlock[num - 1];
+        }
+        
+        T* data() {
+            return vectorBlock;
+        }
+        
+        void resize(size_t new_len) {
+            T* newVectorBlock = (T*)kmalloce(sizeof(T) * new_len);
+
+            if (new_len >= vectorCapacity) {
+                memcpy(newVectorBlock, vectorBlock, vectorCapacity);
+            } else {
+                memcpy(newVectorBlock, vectorBlock, new_len);
+                num = new_len;
+            }
+            vectorCapacity = new_len;
+        }
+        
+        void autoresize() {
+            if (num > (int)(vectorCapacity * 0.80)) {
+                resize((size_t)vectorCapacity * 1.8);
+            }
+        }
+        
+        void clear() {
+            resize(0);
+            vectorBlock[0] = nullptr;
+        }
+        
+        bool empty() {
+            if (num > 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        
+        T& operator[](size_t index) {
+            autoresize();
+            return vectorBlock[index];
+        }
 
         //using Iterator=VectorIterator;
     private:

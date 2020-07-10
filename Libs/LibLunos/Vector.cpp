@@ -1,3 +1,4 @@
+#if 0
 #include "Vector.h"
 
 template<class T>
@@ -90,3 +91,4 @@ T& Vector<T>::operator[](size_t index) {
 }
 
 template int& Vector<int>::operator[](size_t index);
+#endif
