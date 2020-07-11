@@ -8,6 +8,7 @@
 #include <ArchSpecific/MM/PIC.h>
 #include <Drivers/Time/Timer/PIT/PIT.h>
 #include <System/Scheduler/Scheduler.h>
+#include <Drivers/PCI/PCI.h>
 
 void process1() {
     while (true) {
@@ -57,6 +58,7 @@ extern "C" {
 
         PIT pitDriver = PIT();
         pitDriver.initialize_driver();
+        PCIDriver pciDriver = PCIDriver();
         EnableInterrupts();
         /*__asm __volatile__("int $0x0");
         __asm __volatile__("int $0x01");
