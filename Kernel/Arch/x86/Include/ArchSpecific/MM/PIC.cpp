@@ -56,6 +56,7 @@ void EndInterrupt(u8 irq)
 {
     if (irq > 7) {
         iowriteb(PIC1, PIC_EOI);
+        iowriteb(PIC0, PIC_EOI);
     } else {
         iowriteb(PIC0, PIC_EOI);
     }
