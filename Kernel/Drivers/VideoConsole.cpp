@@ -29,20 +29,7 @@ void KClear() {
 //to the framebuffer with a black foreground and white background
 void KPrintString(string outputString) { 
 	const char *str = outputString.c_str();
-	size_t stringLength = outputString.size();
-
-    int color=0b11110000; //white background black text
-	for (size_t i = 0; i < stringLength; i++) {
-		*video++ = *str++; //write character into framebuffer
-        *video++ = color;
-		currColumn += 1; //increment the column for each cell that's filled in
-
-		if (currColumn >= VGA_COLUMNS) { //if all the columns on this row are filled in, move on to the next row
-			currColumn = 0;
-			currRow++;
-			video = (char*)(VGA_TEXT_BUFFER + (VGA_CELL_BYTES * VGA_COLUMNS * currRow));
-		}
-	}
+	KPrintString(str);
 }
 
 //writes a C-style string with a black foreground and white background
@@ -51,9 +38,17 @@ void KPrintString(const char* outputString) {
 	size_t cstringLength = strlen(outputString);
 	
 	for (size_t i = 0; i < cstringLength; i++) {
-		*video++ = *outputString++;
-        *video++ = color;
-		currColumn += 1; //increment the column for each cell that's filled in
+		char currChar = *outputString++;
+		if (currChar == '\n') { //if a newline character is detected, move to the next row
+			currColumn = VGA_COLUMNS;
+		} else if (currChar == '\t') { //if a tab character is detected, move 4 spaces ahead
+			currColumn += 4;
+			video = (char*)(VGA_TEXT_BUFFER + (VGA_CELL_BYTES * VGA_COLUMNS * currRow) + (currColumn * VGA_CELL_BYTES));
+		} else {
+			*video++ = currChar;
+        	*video++ = color;
+			currColumn += 1; //increment the column for each cell that's filled in
+		}
 
 		if (currColumn >= VGA_COLUMNS) { //if all the columns on this row are filled in, move on to the next row
 			currColumn = 0;
