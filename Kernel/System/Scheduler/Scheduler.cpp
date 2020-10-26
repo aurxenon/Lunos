@@ -14,7 +14,7 @@ u32 Scheduler::Schedule(u32 esp) {
     m_current->setStackPointer(esp);
 
     if (m_processes.size() == 0) {
-        klog() << " Returning to " << m_current->getStackPointer();
+        //klog() << " Returning to " << m_current->getStackPointer();
         return m_current->getStackPointer();
     }
 
@@ -23,7 +23,7 @@ u32 Scheduler::Schedule(u32 esp) {
     m_current = m_processes.front();
     m_processes.remove(m_current);
     
-    klog() << " Swapping to " << m_current->getStackPointer();
+    //klog() << " Swapping to " << m_current->getStackPointer();
 
     u32 returnedStackPointer = m_current->getStackPointer();
 
