@@ -9,10 +9,11 @@
 #include <Drivers/Time/Timer/PIT/PIT.h>
 #include <System/Scheduler/Scheduler.h>
 #include <Drivers/PCI/PCI.h>
+#include <Drivers/Storage/PATA/PATADriver.h>
 
 void process1() {
     while (true) {
-        klog() << " Testing1 ";
+        //klog() << " Testing1 ";
         EnableInterrupts();
         asm("hlt");
     }
@@ -20,7 +21,7 @@ void process1() {
 
 void process2() {
     while (true) {
-        klog() << " Testing2 ";
+        //klog() << " Testing2 ";
         asm("hlt");
     }
 }
@@ -59,14 +60,22 @@ extern "C" {
         PIT pitDriver = PIT();
         pitDriver.initialize_driver();
         PCIDriver pciDriver = PCIDriver();
+        PATADriver pataDriver = PATADriver(pciDriver);
         EnableInterrupts();
+        extern PATADevice primaryParentPATADisk;
+        //KClear();
+        char buffer[512];
+        primaryParentPATADisk.readSectorPIO(0, (u8*)buffer);
+        klog() << buffer;
+        //primaryParentPATADisk.readSectorPIO(1, (u8*)buffer);
+        //klog() << buffer;
         /*__asm __volatile__("int $0x0");
         __asm __volatile__("int $0x01");
         __asm __volatile__("int $0x02");*/
         //__asm __volatile__("int $0xee");
         //__asm __volatile__("ud2");
         while (true) {
-            klog() << "K1";
+            //klog() << "K1";
             asm("hlt");
         }
     }
