@@ -17,7 +17,9 @@
 
 #define PCI_MULTIFUNCTION 0b10000000
 
-#define PCI_ADDRESS_ENABLE_BIT 0b10000000000000000000000000000000
+#define PCI_ADDRESS_ENABLE_BIT   0b10000000000000000000000000000000
+#define PCI_BUSMASTER_ENABLE_BIT 0b00000000000000000000000000000100
+#define PCI_IO_SPACE_BIT         0b00000000000000000000000000000001
 
 #define PCI_CONFIG_ADDRESS 0xCF8
 #define PCI_CONFIG_DATA    0xCFC
@@ -57,6 +59,7 @@ struct PCIDevice {
     u32 function;
     u16 pciDeviceCode;
     u16 pciVendorCode;
+    u8 pciSubclassCode;
     u8 pciClassCode;
 };
 
@@ -65,6 +68,8 @@ class PCIDriver : Driver {
         PCIDriver();
         Driver* initialize_driver();
         bool deinitialize_driver();
+        PCIDevice operator[](size_t index);
+        size_t getNumPCIDevices();
     private:
         void enumeratePCIDevices();
 

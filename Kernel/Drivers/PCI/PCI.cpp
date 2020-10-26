@@ -30,10 +30,11 @@ void PCIDriver::enumeratePCIDevices() {
 
                 u16 pciDeviceCode = PCIReadWord(bus, device, 0, PCI_DEVICE_OFFSET);
                 u16 pciVendorCode = PCIReadWord(bus, device, 0, PCI_VENDOR_OFFSET);
+                u8 pciSubclassCode = PCIReadByte(bus, device, 0, PCI_SUBCLASS_OFFSET);
                 u8 pciClassCode = PCIReadByte(bus, device, 0, PCI_CLASS_CODE_OFFSET);
             
                 m_pciDevices[m_numPCIDevices] = ((PCIDevice){bus, device, 0, pciDeviceCode, 
-                        pciVendorCode, pciClassCode}); //save device if present
+                        pciVendorCode, pciSubclassCode, pciClassCode}); //save device if present
                 m_numPCIDevices++; //increment number of present PCI devices
 
                 if (PCIReadWord(bus, device, 0, PCI_HEADER_OFFSET) & PCI_MULTIFUNCTION) { //if device has more than 1 function, discover all functions
@@ -41,11 +42,12 @@ void PCIDriver::enumeratePCIDevices() {
 
                         pciDeviceCode = PCIReadWord(bus, device, function, PCI_DEVICE_OFFSET);
                         pciVendorCode = PCIReadWord(bus, device, function, PCI_VENDOR_OFFSET);
+                        pciSubclassCode = PCIReadByte(bus, device, function, PCI_SUBCLASS_OFFSET);
                         pciClassCode = PCIReadByte(bus, device, function, PCI_CLASS_CODE_OFFSET);
 
                         if (PCIReadWord(bus, device, function, PCI_VENDOR_OFFSET) != PCI_INVALID_DEVICE) {
                             m_pciDevices[m_numPCIDevices] = ((PCIDevice){bus, device, function, 
-                                    pciDeviceCode, pciVendorCode, pciClassCode}); //save device along with function if present
+                                    pciDeviceCode, pciVendorCode, pciSubclassCode, pciClassCode}); //save device along with function if present
                             m_numPCIDevices++; //increment number of present PCI devices
                         }
                     }
@@ -75,6 +77,29 @@ Driver* PCIDriver::initialize_driver() {
 */
 bool PCIDriver::deinitialize_driver() {
     return true;
+}
+
+/*
+* PCIDriver::operator[]:
+*   Returns information about a PCI device using a specified index
+* Arguments:
+*   index - the location within the array of PCI devices
+* Return:
+*   Information about the PCI device at the specified index
+*/
+PCIDevice PCIDriver::operator[](size_t index) {
+    return m_pciDevices[index];
+}
+
+/*
+* PCIDriver::getNumPCIDevices:
+*   Returns the number of PCI devices present
+* Arguments:
+* Return:
+*   The number of PCI devices present within the system
+*/
+size_t PCIDriver::getNumPCIDevices() {
+    return m_numPCIDevices;
 }
 
 /*
