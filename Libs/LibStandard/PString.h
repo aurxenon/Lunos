@@ -5,7 +5,9 @@
 #include <System/KMalloc.h>
 #endif
 
-#include "string.h"
+#include "CString.h"
+
+namespace LibStandard {
 
 const char emptyString = '\0';
 
@@ -80,3 +82,5 @@ typedef class basic_string {
         char *m_chars;
         size_t m_len;
 } string;
+
+}

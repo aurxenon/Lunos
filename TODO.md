@@ -6,5 +6,5 @@
 **Kernel/System**
 * There needs to be a crash handler
 
-**Libs/LibLunos**
+**Libs/LibStandard**
 * Almost everything from the C++ STL is currently missing

@@ -1,7 +1,7 @@
 include include.mk
 
 LUNOS_DIRS =  Kernel
-#LUNOS_DIRS += Libs/LibLunos
+#LUNOS_DIRS += Libs/LibStandard
 
 .PHONY: all $(LUNOS_DIRS)
 

@@ -2,7 +2,7 @@
 
 #include <ArchSpecific/String.h>
 #include <Drivers/VideoConsole.h>
-#include <LibLunos/sstream.h>
+#include <LibStandard/sstream.h>
 
 //FIXME: implement a base stream class for both sstream and kostream
 //template<class T>

@@ -1,5 +1,10 @@
-#include "bastring.h"
+#include "PString.h"
 
+#ifdef KERNEL_INCLUDES
+#define malloc kmalloce
+#endif
+
+namespace LibStandard {
 /*
 Constructors and also string initializers
 */
@@ -28,7 +33,7 @@ void basic_string::instantiate(const basic_string& stringCopy) {
         return;
     }
     m_len = stringCopy.m_len;
-    m_chars = strncpy((char*)kmalloce(stringCopy.m_len), stringCopy.m_chars, m_len);
+    m_chars = strncpy((char*)malloc(stringCopy.m_len), stringCopy.m_chars, m_len);
 }
 
 //initializes m_len and m_chars, then fills them using the C-style string and length
@@ -39,7 +44,7 @@ void basic_string::instantiate(const char *cstring, size_t stringLength) {
         return;
     }
     m_len = stringLength;
-    m_chars = strncpy((char*)kmalloce(stringLength), cstring, stringLength);
+    m_chars = strncpy((char*)malloc(stringLength), cstring, stringLength);
 }
 
 /*
@@ -139,7 +144,7 @@ void basic_string::resizeAt(size_t newSize, size_t index) {
     //if the string length is greater than zero
     if (m_len > 0) {
         m_len = newSize;
-        char *new_chars = (char*)kmalloce(newSize);
+        char *new_chars = (char*)malloc(newSize);
         if ((m_len + index) > newSize) {
             strncpy(new_chars + index, m_chars, m_len - index);
         } else {
@@ -148,10 +153,12 @@ void basic_string::resizeAt(size_t newSize, size_t index) {
         m_chars = new_chars;
     } else {
         m_len = newSize;
-        m_chars = (char*)kmalloce(newSize);
+        m_chars = (char*)malloc(newSize);
     }
 }
 
 int basic_string::compare(const string& str) {
     return strcmp(m_chars, ((basic_string)str).c_str());
+}
+
 }

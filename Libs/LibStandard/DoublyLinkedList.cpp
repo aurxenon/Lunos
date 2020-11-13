@@ -1,5 +1,7 @@
 #include "DoublyLinkedList.h"
 
+namespace LibStandard {
+
 /*
 * DoublyLinkedList::front:
 *   Returns the node at the return of the list
@@ -194,7 +196,11 @@ void DoublyLinkedNode<T>::setPrevNode(T* prevNode) {
     m_prevNode = prevNode;
 }
 
+}
+
+#ifdef KERNEL_INCLUDES
 //very very VERY hacky
 #include <System/Process/Process.h>
 
-template class DoublyLinkedList<Process>;
+template class LibStandard::DoublyLinkedList<Process>;
+#endif

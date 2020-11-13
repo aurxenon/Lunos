@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Iterator.h"
-#include "string.h"
+#include "CString.h"
 
 #ifdef KERNEL_INCLUDES
 #include <System/KMalloc.h>

@@ -1,5 +1,7 @@
 #include "ConvertNums.h"
 
+namespace LibStandard {
+
 //converted from osdev itoa implementation
 //this will hopefully only ever be populated with non floating point numbers
 template<typename T>
@@ -28,3 +30,5 @@ string numToString(T value, int base) {
 }
 
 template string numToString(int value, int base);
+
+}

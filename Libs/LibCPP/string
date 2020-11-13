@@ -1,5 +1,5 @@
 #pragma once
 
-#include "bastring.h"
+#include "PString.h"
 
 //typedef basic_string<char> string;

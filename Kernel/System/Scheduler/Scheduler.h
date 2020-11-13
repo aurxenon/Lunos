@@ -2,11 +2,11 @@
 
 #include <ArchSpecific/Types.h>
 #include <System/Process/Process.h>
-#include <LibLunos/DoublyLinkedList.h>
+#include <LibStandard/DoublyLinkedList.h>
 #include <ArchSpecific/Arch.h>
 #include <Log/KLog.h>
 #include <ArchSpecific/MM/InterruptManager.h>
-#include <LibLunos/new.h>
+#include <LibStandard/new.h>
 
 class Scheduler {
     public:

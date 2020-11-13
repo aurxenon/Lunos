@@ -3,3 +3,5 @@ Toolchain/Local/*
 Toolchain/Tarballs/*
 Kernel/bin/*
 Kernel/obj/*
+obj/*
+bin/*

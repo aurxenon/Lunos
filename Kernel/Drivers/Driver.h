@@ -1,6 +1,6 @@
 #pragma once
 
-#include <LibLunos/bastring.h>
+#include <LibStandard/PString.h>
 
 /*
     Base class for all device drivers

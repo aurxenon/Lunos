@@ -1,6 +1,7 @@
-#include "string.h"
+#include "CString.h"
 
-extern "C" {
+namespace LibStandard {
+
     size_t strlen(const char *str) {
         size_t i;
         for (i = 0; str[i] != '\0'; i++) {}
@@ -16,14 +17,22 @@ extern "C" {
         return (char*)memcpy((void*)dest, src, len);
     }
 
-    //FIXME this doesn't conform to the C standard
-    int strcmp(const char *str1, const char *str2) {
-        int i;
-        for (i = 0; (str1[i] == str2[i] && str1[i] != '\0'); i++);
-        if (i == (int)strlen(str1) && i == (int)strlen(str2)) {
+    int strcmp(const char* str1, const char* str2) {
+        return strncmp(str1, str2, strlen(str1));
+    }
+
+    int strncmp(const char* str1, const char* str2, size_t len) {
+        if((u8*)str1 == (u8*)str2) {
             return 0;
         }
-        return i;
+
+        for (size_t i = 0; i < len; i++) {
+            if (str1[i] != str2[i]) {
+                return str1[i] - str2[i];
+            }
+        }
+
+        return 0;
     }
 
     void *memcpy(void *dest, const void *src, size_t len) {
@@ -44,4 +53,5 @@ extern "C" {
         }
         return fillDest;
     }
+
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef KERNEL_INCLUDES
 #include <ArchSpecific/Types.h>
 #include <System/KMalloc.h>
 
@@ -12,3 +13,4 @@ void* operator new[](std::size_t size);
 
 void operator delete(void* ptr);
 void operator delete[](void* ptr);
+#endif

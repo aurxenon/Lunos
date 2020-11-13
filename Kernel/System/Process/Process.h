@@ -4,7 +4,7 @@
 #include <ArchSpecific/Arch.h>
 #include <ArchSpecific/MM/MemoryManager.h>
 #include <System/KMalloc.h>
-#include <LibLunos/DoublyLinkedList.h>
+#include <LibStandard/DoublyLinkedList.h>
 
 #define PROCESS_STACK_SIZE 2048
 

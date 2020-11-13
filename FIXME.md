@@ -5,7 +5,7 @@
 * Refactor poorly written / hacky bits of code
 * Unwinding functionality????
 
-**Libs/LibLunos**
+**Libs/LibStandard**
 * C-string comparisons and thus C++ string comparisons are broken
 * Vector's are VERY unfinished, and are missing Iterators
 * More of the STL needs to be implemented in general, especially data structures

@@ -1,7 +1,13 @@
 #pragma once
 
+#if defined KERNEL_INCLUDES
 #include <ArchSpecific/Types.h>
 #include <Log/KLog.h>
+#elif defined(TESTING_INCLUDES)
+#include <stddef.h>
+#endif
+
+namespace LibStandard {
 
 template <class T>
 class DoublyLinkedNode;
@@ -47,3 +53,5 @@ class DoublyLinkedNode {
         T* m_nextNode;
         T* m_prevNode;
 };
+
+}

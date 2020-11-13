@@ -1,7 +1,7 @@
 {
     "configurations": [
         {
-            "name": "Linux",
+            "name": "Kernel",
             "includePath": [
                 "${workspaceFolder}/Kernel/Arch/x86/Include/**",
                 "${workspaceFolder}/Kernel/Drivers/**",
@@ -18,6 +18,19 @@
             "cStandard": "c11",
             "cppStandard": "c++20",
             "intelliSenseMode": "gcc-x86"
+        },
+        {
+            "name": "Tests",
+            "includePath": [
+                "${workspaceFolder}/Libs/**"
+            ],
+            "defines": [
+                "TESTING_INCLUDES"
+            ],
+            "compilerPath": "${default}",
+            "cStandard": "c11",
+            "cppStandard": "c++20",
+            "intelliSenseMode": "${default}"
         }
     ],
     "version": 4
