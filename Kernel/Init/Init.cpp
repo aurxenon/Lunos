@@ -10,6 +10,7 @@
 #include <System/Scheduler/Scheduler.h>
 #include <Drivers/PCI/PCI.h>
 #include <Drivers/Storage/PATA/PATADriver.h>
+#include <ArchSpecific/multiboot.h>
 
 void process1() {
     while (true) {
@@ -27,12 +28,14 @@ void process2() {
 }
 
 extern "C" {
-    void kmain() {
+    void kmain(void* kernelPageArea, multiboot_info_t* mbd, unsigned int magic) {
         DisableInterrupts();
         set_iopl();
         KClear();
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
-        initializePaging();
+        InitializeMemoryManager(kernelPageArea, mbd);
+        extern u32 contiguousMemory;
+        klog() << " Contiguous Memory: " << contiguousMemory;
         klog() << " Bottom 4MB of RAM identity mapped! ";
         InitializeSegmentation();
         klog() << "GDT initialized! ";

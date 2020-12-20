@@ -1,7 +1,10 @@
 #include "CString.h"
 
+#ifndef KERNEL_INCLUDES
 namespace LibStandard {
-
+#elif defined(KERNEL_INCLUDES)
+extern "C" {
+#endif
     size_t strlen(const char *str) {
         size_t i;
         for (i = 0; str[i] != '\0'; i++) {}

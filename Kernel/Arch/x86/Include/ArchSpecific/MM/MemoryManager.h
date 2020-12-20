@@ -3,11 +3,14 @@
 #include <ArchSpecific/Types.h>
 #include <Log/KLog.h>
 #include <System/KMalloc.h>
+#include <ArchSpecific/multiboot.h>
+#include <LibStandard/Bitmap.h>
+#include <LibStandard/CString.h>
 
-#define PAGE_DIR_ENTRIES 1024
-#define PAGE_TBL_ENTRIES 1024
-#define UNINITIALIZED_DIR_ENTRY 0b00000000000000000000000000000010 //the page directory entry is not present in the cpu
-#define UNINITIALIZED_TBL_ENTRY 0b00000000000000000000000000000011 //page table entry is r/w, and is present in memory
+#include "PageTable.h"
+#include "PageDirectory.h"
+#include "CPU.h"
+
 #define PAGING_ENABLE 0b10000000000000000000000000000001 //enables PG and PE
 
 #define GDT_MAX_ENTRIES    256
@@ -41,7 +44,8 @@ struct GDTPtr
 /*
     Turns on paging.
 */
-void initializePaging();
+void InitializeMemoryManager(void* kernelPageArea, multiboot_info_t* mbd);
+void CreateKernelPages(void* kernelPageArea);
 
 void RegisterGDTEntry(int index, u32 limit, u32 base, u8 access, u8 flags);
 void LoadGDT();
@@ -50,23 +54,3 @@ void LoadGDT();
     Sets up Global Descriptor Table
 */
 void InitializeSegmentation();
-
-inline void write_cr3(u32 value) {
-    __asm __volatile__(
-        "movl %0, %%cr3" ::"r"(value):"memory" 
-    );
-}
-
-inline void write_cr0(u32 value) {
-    __asm __volatile__(
-        "movl %0, %%cr0" ::"r"(value):"memory" 
-    );
-}
-
-inline u32 read_cr0() {
-    u32 value;
-    __asm __volatile__(
-        "movl %%cr0, %0":"=r"(value)::"memory" 
-    );
-    return value;
-}

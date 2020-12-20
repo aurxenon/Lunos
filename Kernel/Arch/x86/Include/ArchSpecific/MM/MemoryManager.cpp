@@ -1,8 +1,5 @@
 #include "MemoryManager.h"
 
-u32 page_directory[PAGE_DIR_ENTRIES] __attribute__((aligned(4096)));
-u32 page_table_1[PAGE_TBL_ENTRIES] __attribute__((aligned(4096)));
-
 ///////////////
 
 GDTPtr globalDescriptorTablePTR;
@@ -10,38 +7,46 @@ GDTEntry* globalDescriptorTable;
 
 u16 globalDescriptorTableLength;
 
+u32 contiguousMemory;
+
+u8 memoryBitmapSpace[UINT32_MAX / PAGE_SIZE / 8];
+
+void InitializeMemoryManager(void* kernelPageArea, multiboot_info_t* mbd) {
+    if (mbd->flags & MULTIBOOT_INFO_MEMORY) {
+        contiguousMemory = mbd->mem_upper + mbd->mem_lower;
+    }
+    if (mbd->flags & MULTIBOOT_INFO_MEM_MAP) {
+
+    }
+    //LibStandard::Bitmap freeMemoryBitmap(memoryBitmapSpace, contiguousMemory / PAGE_SIZE / 8);
+    CreateKernelPages(kernelPageArea);
+}
+
 /*
-* RegisterGDTEntry:
-*   Creates page table to identity map the first 4MB of RAM, loads this table
+* CreateKernelPages:
+*   Creates page table to identity map the first 4MB of RAM for kernel, loads this table
 *   into the page directory, then enables paging and loads page directory into processor
 * Arguments:
 * Return:
 */
-void initializePaging() {
+void CreateKernelPages(void* kernelPageArea) {
+    PageDirectory& kernelPageDirectory = *((PageDirectory*)kernelPageArea);
+    PageTable& kernelPageTable = *((PageTable*)(kernelPageArea + PAGE_SIZE));
 
-    //
-    //creates an empty page directory
-    //
-    for (int i = 0; i < PAGE_DIR_ENTRIES; i++) {
-        page_directory[i] = UNINITIALIZED_DIR_ENTRY;
-    }
+    kernelPageDirectory.initialize();
+    kernelPageTable.initialize();
 
     //
     //creates a page table that maps the first 4MB of RAM
     //
     for (int i = 0; i < PAGE_TBL_ENTRIES; i++) {
-        page_table_1[i] = (i * 4096) | UNINITIALIZED_TBL_ENTRY;
+        kernelPageTable[i].setPhysicalAddress(i * 4096);
     }
 
-    //
-    //places the empty page table into the page directory
-    //
-    page_directory[0] = ((u32)page_table_1) | UNINITIALIZED_TBL_ENTRY;
+    kernelPageDirectory[0].setPageTable(kernelPageTable);
+    kernelPageDirectory[0].setPresent(true);
 
-    //
-    //writes the address of the page directory to the CR3 register
-    //
-    write_cr3((u32)page_directory);
+    kernelPageDirectory.load();
 
     //
     //reads the cr0 register, enables paging bit, and then rewrites the cr0 register

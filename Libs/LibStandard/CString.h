@@ -9,7 +9,11 @@
 typedef uint8_t u8;
 #endif
 
+#ifndef KERNEL_INCLUDES
 namespace LibStandard {
+#elif defined(KERNEL_INCLUDES)
+extern "C" {
+#endif
     size_t strlen(const char *str);
     char *strcpy(const char *dest, const char *src);
     char *strncpy(const char *dest, const char *src, size_t len);
@@ -18,7 +22,3 @@ namespace LibStandard {
     void *memcpy(void *dest, const void *src, size_t len);
     void *memset(void *dest, int c, size_t len);
 }
-
-#ifdef KERNEL_INCLUDES
-using namespace LibStandard;
-#endif

@@ -5,6 +5,7 @@
 #include <System/KMalloc.h>
 
 #include "PIC.h"
+#include "CPU.h"
 
 #define IDT_NUM_ENTRIES 256
 
@@ -24,6 +25,9 @@
     extern "C" void ExceptionHandler ## i () \
     { \
         klog() << " Caught Exception " << interruptDescriptions[i]; \
+        while(true) { \
+            asm("nop"); \
+        } \
     }
 
 struct IDTEntry {

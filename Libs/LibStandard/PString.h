@@ -84,3 +84,7 @@ typedef class basic_string {
 } string;
 
 }
+
+#ifdef KERNEL_INCLUDES
+using namespace LibStandard;
+#endif

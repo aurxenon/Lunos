@@ -20,6 +20,11 @@ stack_begin:
 .skip 1024 * 64
 stack_end:
 
+.section .paging_area
+.align 4096
+paging_area_begin:
+.skip 4096 * 2
+
 .section .text
 .extern kmain
 
@@ -28,6 +33,10 @@ stack_end:
 _start:
 	mov %ebp, stack_begin
 	mov %esp, stack_end
+
+	pushl %eax /*magic*/
+	pushl %ebx /*multiboot information*/
+	pushl $paging_area_begin
 	call kmain
 
 loop:

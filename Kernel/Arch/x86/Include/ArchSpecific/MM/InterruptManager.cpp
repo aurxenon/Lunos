@@ -6,7 +6,7 @@ const char* interruptDescriptions[17] = {"Divide Error", "Debug", "NMI Interrupt
     "Reserved", "Floating-Point Error"};
 
 IDTPtr interruptTablePtr;
-static IDTEntry* interruptTable;
+static IDTEntry interruptTable[sizeof(IDTEntry) * IDT_NUM_ENTRIES];
 
 Exception(0)
 Exception(1)
@@ -22,8 +22,6 @@ Exception(10)
 Exception(11)
 Exception(12)
 Exception(13)
-Exception(14)
-Exception(15)
 Exception(16)
 
 /*
@@ -54,6 +52,34 @@ extern "C" void UnimplementedISR()
 }
 
 /*
+* PageFaultHandler:
+*   Error handling when a page fault occurs
+* Arguments:
+* Return:
+*/
+extern "C" void PageFaultHandler() {
+    klog() << "Caught Page Fault when attempting to access " << read_cr2();
+    while(true) {
+        asm("nop");
+    }
+}
+
+/*
+* __asm_Exception_ISR14:
+*   Serves as a "safe" assembly wrapper for PageFaultHandler so that the interrupt handler
+*   will be safely called
+* Arguments:
+* Return:
+*/
+extern "C" void __asm_Exception_ISR14();
+__asm( \
+    ".globl __asm_Exception_ISR14\n"
+    "__asm_Exception_ISR14:\n"
+    "   call PageFaultHandler\n"
+    "   iret\n"
+);
+
+/*
 * AddISR:
 *   Creates an IDT entry that references a specific ISR, thus when an interrupt happens
 *   the processor knows which and where the ISR is located
@@ -79,7 +105,7 @@ void AddISR(int index, void (*ISR)())
 */
 void InitializeInterrupts()
 {
-    interruptTable = (IDTEntry*)kmalloce(sizeof(IDTEntry) * IDT_NUM_ENTRIES);
+    //interruptTable = (IDTEntry*)kmalloce();
 
     interruptTablePtr.address = interruptTable;
     interruptTablePtr.size = IDT_NUM_ENTRIES * sizeof(IDTEntry);
@@ -103,7 +129,6 @@ void InitializeInterrupts()
     AddISR(12, __asm_Exception_ISR12);
     AddISR(13, __asm_Exception_ISR13);
     AddISR(14, __asm_Exception_ISR14);
-    AddISR(15, __asm_Exception_ISR15);
     AddISR(16, __asm_Exception_ISR16);
 
     LoadIDT();
