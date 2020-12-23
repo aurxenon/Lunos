@@ -4,14 +4,18 @@
 
 #include "TestCommon.h"
 
-const int NUM_TESTS_TO_PERFORM = 2;
+const int NUM_TESTS_TO_PERFORM = 4;
 
 bool check_enableBit();
 bool check_disableBit();
+bool check_overflow();
+bool check_overflowRead();
 
 TestInfo testsToPerform[] = {
     TestInfo("enableBit", &check_enableBit),
-    TestInfo("disableBit", &check_disableBit)
+    TestInfo("disableBit", &check_disableBit),
+    TestInfo("enableBit & disableBit overflow", &check_overflow),
+    TestInfo("getBit overflow", &check_overflowRead)
 };
 
 int main() {
@@ -42,10 +46,28 @@ bool check_enableBit() {
 
 bool check_disableBit() {
     const size_t EXPECTED_BIT_STATE = false;
-    u8 bitmapArea[2] = {0xFF, 0xFF};
+    u8 bitmapArea[] = {0xFF, 0xFF};
     LibStandard::Bitmap bitmap(bitmapArea, 2);
 
     bitmap.disableBit(14);
     
     return (bitmap.getBit(14) == EXPECTED_BIT_STATE) ? true : false;
+}
+
+bool check_overflow() {
+    const u8 EXPECTED_BIT_STATE = 0xFF;
+    u8 bitmapArea[] = {0xFF, 0xFF, 0xFF};
+    LibStandard::Bitmap bitmap(bitmapArea, 2);
+
+    bitmap.disableBit(17);
+    
+    return (bitmapArea[2] == EXPECTED_BIT_STATE) ? true : false;
+}
+
+bool check_overflowRead() {
+    const size_t EXPECTED_BIT_STATE = false;
+    u8 bitmapArea[] = {0xFF, 0xFF, 0xFF};
+    LibStandard::Bitmap bitmap(bitmapArea, 2);
+    
+    return (bitmap.getBit(17) == EXPECTED_BIT_STATE) ? true : false;
 }
