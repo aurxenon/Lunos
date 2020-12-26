@@ -3,6 +3,7 @@
 #include <LibStandard/Vector.h>
 #include <LibStandard/sstream.h>
 #include <ArchSpecific/MM/MemoryManager.h>
+#include <ArchSpecific/MM/GDT.h>
 #include <Drivers/DriverManager.h>
 #include <ArchSpecific/MM/InterruptManager.h>
 #include <ArchSpecific/MM/PIC.h>

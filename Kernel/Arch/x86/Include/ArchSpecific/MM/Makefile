@@ -5,6 +5,7 @@ MM_OBJECTS += $(OBJDIR)/InterruptManager.o
 MM_OBJECTS += $(OBJDIR)/PIC.o
 MM_OBJECTS += $(OBJDIR)/PageTable.o
 MM_OBJECTS += $(OBJDIR)/PageDirectory.o
+MM_OBJECTS += $(OBJDIR)/GDT.o
 
 all : MM
 

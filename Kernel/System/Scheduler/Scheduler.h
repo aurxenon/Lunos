@@ -6,6 +6,7 @@
 #include <ArchSpecific/Arch.h>
 #include <Log/KLog.h>
 #include <ArchSpecific/MM/InterruptManager.h>
+#include <ArchSpecific/MM/GDT.h>
 #include <LibStandard/new.h>
 
 class Scheduler {

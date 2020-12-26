@@ -1,14 +1,15 @@
 #include "Process.h"
 
-extern u32 eflagsOnly;
-TrapFrame* eflagsTrapStruct;
-
 Process::Process() {
+    createMemorySpace();
+
     m_processTSS.ss0 = TSS_SS0;
     m_processTSS.io_map_addr = (u16)TSS_IOPB;
 }
 
 Process::Process(u32 eip) {
+    createMemorySpace();
+
     m_stackPointer = (u32)((u32)(kmalloce(PROCESS_STACK_SIZE)) + PROCESS_STACK_SIZE - 50); //allocates a new stack
     m_stackPointer -= sizeof(TrapFrame); //allocates space for a trap frame to return to
     TrapFrame* trapFrame = (TrapFrame*)m_stackPointer; //fills out a trap frame
@@ -23,6 +24,10 @@ Process::Process(u32 eip) {
     m_processTSS.ss0 = TSS_SS0; //fills out a tss
     m_processTSS.esp0 = m_stackPointer;
     m_processTSS.io_map_addr = (u16)TSS_IOPB;
+}
+
+void Process::createMemorySpace() {
+    
 }
 
 size_t Process::getAllocatedCpuTicks() {

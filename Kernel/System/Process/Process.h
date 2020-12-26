@@ -3,6 +3,7 @@
 #include <ArchSpecific/Types.h>
 #include <ArchSpecific/Arch.h>
 #include <ArchSpecific/MM/MemoryManager.h>
+#include <ArchSpecific/MM/GDT.h>
 #include <System/KMalloc.h>
 #include <LibStandard/DoublyLinkedList.h>
 
@@ -18,6 +19,8 @@ class Process : public DoublyLinkedNode<Process> {
     public:
         Process();
         Process(u32 eip);
+
+        void createMemorySpace();
         
         u32 getAllocatedCpuTicks();
         void setAllocatedCpuTicks(size_t ticks);
@@ -33,6 +36,7 @@ class Process : public DoublyLinkedNode<Process> {
         TaskState m_currentTaskState;
 
         u32 m_stackPointer;
+        PageDirectory m_pageDirectory;
 
         TSS m_processTSS;
 };
