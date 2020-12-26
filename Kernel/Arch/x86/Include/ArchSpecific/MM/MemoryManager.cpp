@@ -14,11 +14,70 @@ u8 memoryBitmapSpace[UINT32_MAX / PAGE_SIZE / 8];
 void InitializeMemoryManager(void* kernelPageArea, multiboot_info_t* mbd) {
     if (mbd->flags & MULTIBOOT_INFO_MEMORY) {
         contiguousMemory = mbd->mem_upper + mbd->mem_lower;
+        contiguousMemory *= 1024;
     }
-    if (mbd->flags & MULTIBOOT_INFO_MEM_MAP) {
+    LibStandard::Bitmap freeMemoryBitmap(memoryBitmapSpace, UINT32_MAX / PAGE_SIZE / 8);
+    
+    //disable allowing allocation of any ram greater than the amount of ram present in the system
+    u32 extraBytes = (u32)contiguousMemory % PAGE_SIZE;
+    for (u32 i = UINT32_MAX; i > contiguousMemory - extraBytes; i -= PAGE_SIZE) { 
+        freeMemoryBitmap.enableBit(i / PAGE_SIZE);
+    }
 
+    //disable allowing allocation of any ram below 1mb
+    for (u32 i = 0; i < 0xFFFFF; i += PAGE_SIZE) { 
+        freeMemoryBitmap.enableBit(i / PAGE_SIZE);
     }
-    //LibStandard::Bitmap freeMemoryBitmap(memoryBitmapSpace, contiguousMemory / PAGE_SIZE / 8);
+
+    if (mbd->flags & MULTIBOOT_INFO_MEM_MAP) {
+        multiboot_memory_map_t* memMapNode = (multiboot_memory_map_t*)mbd->mmap_addr;
+
+        klog() << "\n" << contiguousMemory << " bytes of memory present";
+        klog() << "\nSystem memory map:";
+
+        while (memMapNode < (multiboot_memory_map_t*)(mbd->mmap_addr + mbd->mmap_length)) {
+            klog() << "\nstart address:" << memMapNode->addr_low << " length:" << memMapNode->len_low << " type-" << memMapNode->type;
+            u32 memMapNodeStart = memMapNode->addr_low;
+            u32 startExtraBytes = (u32)memMapNodeStart % PAGE_SIZE;
+            memMapNodeStart -= startExtraBytes;
+
+            if (memMapNode->type != MULTIBOOT_MEMORY_AVAILABLE) {
+                u32 memMapNodeEnd = memMapNode->len_low + memMapNodeStart;
+                u32 endExtraBytes = (u32)memMapNodeStart % PAGE_SIZE;
+                memMapNodeEnd -= endExtraBytes;
+                memMapNodeEnd += PAGE_SIZE;
+
+                for (u32 i = memMapNodeStart; i < memMapNodeEnd; i += PAGE_SIZE) {
+                    freeMemoryBitmap.enableBit(i / PAGE_SIZE);
+                }
+                memMapNode = (multiboot_memory_map_t*)((u32)memMapNode + memMapNode->size + sizeof(memMapNode->size));
+                continue;
+            }
+
+            if (memMapNode->type == MULTIBOOT_MEMORY_AVAILABLE && memMapNode->len_low < PAGE_SIZE) {
+                freeMemoryBitmap.enableBit(memMapNodeStart / PAGE_SIZE);
+                memMapNode = (multiboot_memory_map_t*)((u32)memMapNode + memMapNode->size + sizeof(memMapNode->size));
+                continue;
+            }
+            
+            u32 lenExtraBytes = memMapNode->len_low % PAGE_SIZE;
+            if (memMapNode->type == MULTIBOOT_MEMORY_AVAILABLE && lenExtraBytes != 0) {
+                memMapNodeStart += memMapNode->len_low;
+                memMapNodeStart -= lenExtraBytes;
+
+                freeMemoryBitmap.enableBit(memMapNodeStart / PAGE_SIZE);
+                memMapNode = (multiboot_memory_map_t*)((u32)memMapNode + memMapNode->size + sizeof(memMapNode->size));
+                continue;
+            }
+            memMapNode = (multiboot_memory_map_t*)((u32)memMapNode + memMapNode->size + sizeof(memMapNode->size));
+        }
+    } else {
+        klog() << "Unable to obtain memory map from bootloader, halting!";
+        while (true) {
+            asm("nop");
+        }
+    }
+    klog() << "\n";
     CreateKernelPages(kernelPageArea);
 }
 

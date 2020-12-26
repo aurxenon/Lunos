@@ -34,9 +34,6 @@ extern "C" {
         KClear();
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
         InitializeMemoryManager(kernelPageArea, mbd);
-        extern u32 contiguousMemory;
-        klog() << " Contiguous Memory: " << contiguousMemory;
-        klog() << " Bottom 4MB of RAM identity mapped! ";
         InitializeSegmentation();
         klog() << "GDT initialized! ";
         InitializeInterrupts();
