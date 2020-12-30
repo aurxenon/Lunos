@@ -6,6 +6,7 @@ LOCAL_OBJDIR = $(TOPDIR)/obj
 
 LIBSTANDARD_TESTS = $(TEST_OUT)/CStringTests
 LIBSTANDARD_TESTS += $(TEST_OUT)/BitmapTests
+LIBSTANDARD_TESTS += $(TEST_OUT)/SinglyLinkedListTests
 
 all : LibStandardTests
 
