@@ -27,6 +27,8 @@ class Process : public DoublyLinkedNode<Process> {
 
         u32 getStackPointer();
         void setStackPointer(u32 stackPointer);
+
+        void loadVMSpace();
         
         void updateTSS();
         TSS* getTSS();
@@ -36,7 +38,8 @@ class Process : public DoublyLinkedNode<Process> {
         TaskState m_currentTaskState;
 
         u32 m_stackPointer;
-        PageDirectory m_pageDirectory;
+        PageDirectory* m_pageDirectory;
+        void* m_kernelStackBase;
 
         TSS m_processTSS;
 };

@@ -1,5 +1,8 @@
 #pragma once
 
+#define PAGE_SIZE 4096
+#define BITS_PER_BYTE 8
+
 inline void write_cr3(u32 value) {
     __asm __volatile__(
         "movl %0, %%cr3" ::"r"(value):"memory" 

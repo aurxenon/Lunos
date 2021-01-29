@@ -1,8 +1,12 @@
 #pragma once
 
 #include <ArchSpecific/Types.h>
+#include <LibStandard/CString.h>
+#include <LibStandard/new.h>
 
-#define PAGE_SIZE 4096
+#include "MemoryManager.h"
+#include "CPU.h"
+
 #define PAGE_TBL_ENTRIES 1024
 
 #define PT_UNINITIALIZED_ENTRY 0b00000000000000000000000000000011 //page table entry is r/w, and is present in memory
@@ -10,6 +14,9 @@
 #define PT_PRESENT             0b00000000000000000000000000000001
 #define PT_WRITEABLE           0b00000000000000000000000000000010
 #define PT_SUPERVISOR          0b00000000000000000000000000000100
+
+class MemoryManager;
+extern MemoryManager& getMM();
 
 class PageTableEntry {
     public:
@@ -31,11 +38,18 @@ class PageTableEntry {
         u32 m_pageTableEntry;
 };
 
+void* ptOperatorNew();
+
 class PageTable {
     public:
         PageTable();
+        PageTable(PageTable& otherPageTable);
 
         PageTableEntry& operator[](size_t pageTableEntryIndex);
+        void operator=(PageTable& otherPageTable);
+        void* operator new(std::size_t size) {
+            return ptOperatorNew();
+        }
 
         void initialize();
     private:

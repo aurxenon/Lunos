@@ -1,7 +1,10 @@
 #pragma once
 
 #include <ArchSpecific/Types.h>
+#include <LibStandard/CString.h>
+#include <LibStandard/new.h>
 
+#include "MemoryManager.h"
 #include "PageTable.h"
 #include "CPU.h"
 
@@ -12,6 +15,9 @@
 #define PD_WRITEABLE           0b00000000000000000000000000000010
 #define PD_PRESENT             0b00000000000000000000000000000001
 
+class PageTable;
+class PageTableEntry;
+
 class PageDirectoryEntry {
     public:
         PageDirectoryEntry();
@@ -19,9 +25,10 @@ class PageDirectoryEntry {
         void clear();
 
         void operator=(PageDirectoryEntry otherPageDirectoryEntry);
+        PageTableEntry& operator[](size_t pageTableIndex);
 
-        u32 getPageTableAddress();
-        void setPageTableAddress(u32 physicalAddress);
+        u32 getPhysicalPageTableAddress();
+        void setPhysicalPageTableAddress(u32 physicalAddress);
 
         PageTable& getPageTable();
         void setPageTable(PageTable& pageTable);
@@ -35,11 +42,18 @@ class PageDirectoryEntry {
         u32 m_pageDirectoryEntry;
 };
 
+void* pdOperatorNew();
+
 class PageDirectory {
     public:
         PageDirectory();
+        PageDirectory(PageDirectory& otherPageDirectory);
+        void* operator new(std::size_t size) {
+            return pdOperatorNew();
+        }
 
         PageDirectoryEntry& operator[](size_t pageDirectoryEntryIndex);
+        void operator=(PageDirectory& otherPageDirectory);
 
         void initialize();
 

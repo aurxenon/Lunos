@@ -34,7 +34,7 @@ extern "C" {
         set_iopl();
         KClear();
         klog() << "Hello World!" << " 1 " << " 2 " << " 3 " << 4;
-        InitializeMemoryManager(kernelPageArea, mbd);
+        MemoryManager memoryManager(kernelPageArea, mbd);
         InitializeSegmentation();
         klog() << "GDT initialized! ";
         InitializeInterrupts();

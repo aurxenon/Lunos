@@ -15,6 +15,7 @@ u32 Scheduler::Schedule(u32 esp) {
 
     if (m_processes.size() == 0) {
         //klog() << " Returning to " << m_current->getStackPointer();
+        m_current->loadVMSpace();
         return m_current->getStackPointer();
     }
 
@@ -27,6 +28,7 @@ u32 Scheduler::Schedule(u32 esp) {
 
     u32 returnedStackPointer = m_current->getStackPointer();
 
+    m_current->loadVMSpace();
     return returnedStackPointer;
 }
 

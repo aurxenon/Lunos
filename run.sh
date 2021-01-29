@@ -10,5 +10,5 @@ elif [ "$1" == "-tests" ]; then
         ./$test
     done
 elif [ "$1" == "" ]; then
-    qemu-system-i386 -kernel $LUNOS_DIR/Kernel/bin/LunosKernel -no-reboot -rtc base=localtime -hda hda.txt
+    qemu-system-i386 -kernel $LUNOS_DIR/Kernel/bin/LunosKernel -d cpu_reset -rtc base=localtime -hda hda.txt
 fi
